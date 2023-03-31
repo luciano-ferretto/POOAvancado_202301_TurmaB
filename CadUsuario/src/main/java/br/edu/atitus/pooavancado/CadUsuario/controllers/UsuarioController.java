@@ -5,6 +5,10 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort.Direction;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -30,8 +34,6 @@ public class UsuarioController {
 	@Autowired
 	private UsuarioRepository usuarioRepository;
 	
-	private List<Usuario> listaUsuarios = new ArrayList<>();
-	
 	@PostMapping
 	public ResponseEntity<Object> postUsuarios(@RequestBody Usuario usuario){
 		usuarioRepository.save(usuario);
@@ -39,8 +41,9 @@ public class UsuarioController {
 	}
 	
 	@GetMapping
-	public ResponseEntity<Object> getUsuarios(@RequestParam(required = false) String nome, @RequestParam(required = false) String email){
-		List<Usuario> lista = usuarioRepository.findAll();
+	public ResponseEntity<Object> getUsuarios(@PageableDefault(page = 0, size = 10, sort = "id", direction = Direction.ASC) Pageable paginacao,  
+			@RequestParam(required = false) String nome, @RequestParam(required = false) String email){
+		Page<Usuario> lista = usuarioRepository.findAll(paginacao);
 		return ResponseEntity.status(HttpStatus.OK).body(lista);
 	}
 	
@@ -68,6 +71,7 @@ public class UsuarioController {
 	
 	@PatchMapping("/status/{id}")
 	public ResponseEntity<Object> alteraStatus(@PathVariable long id){
+		usuarioRepository.alteraStatus(id);
 		return ResponseEntity.status(HttpStatus.OK).body(id);
 	}
 	
