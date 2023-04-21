@@ -1,10 +1,5 @@
 package br.edu.atitus.pooavancado.CadUsuario.controllers;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort.Direction;
@@ -24,54 +19,80 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.edu.atitus.pooavancado.CadUsuario.entities.Usuario;
-import br.edu.atitus.pooavancado.CadUsuario.repositories.UsuarioRepository;
+import br.edu.atitus.pooavancado.CadUsuario.services.UsuarioService;
 
 @RestController
 @RequestMapping("/usuarios")
 @CrossOrigin(origins = "*")
 public class UsuarioController {
 	
-	@Autowired
-	private UsuarioRepository usuarioRepository;
+	final UsuarioService usuarioService;
 	
+	public UsuarioController(UsuarioService usuarioService) {
+		super();
+		this.usuarioService = usuarioService;
+	}
+
 	@PostMapping
 	public ResponseEntity<Object> postUsuarios(@RequestBody Usuario usuario){
-		usuarioRepository.save(usuario);
+		try {
+			usuarioService.save(usuario);
+		} catch (Exception e) {
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+		}
 		return ResponseEntity.status(HttpStatus.CREATED).body(usuario);
 	}
 	
 	@GetMapping
 	public ResponseEntity<Object> getUsuarios(@PageableDefault(page = 0, size = 10, sort = "id", direction = Direction.ASC) Pageable paginacao,  
 			@RequestParam(required = false) String nome, @RequestParam(required = false) String email){
-		Page<Usuario> lista = usuarioRepository.findAll(paginacao);
-		return ResponseEntity.status(HttpStatus.OK).body(lista);
+		try {
+			Page<Usuario> lista = usuarioService.findByNome(nome, paginacao);
+			return ResponseEntity.status(HttpStatus.OK).body(lista);
+		} catch (Exception e) {
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+		}
 	}
 	
 	@GetMapping("/{id}")
 	public ResponseEntity<Object> getUsuarioById(@PathVariable long id){
-		Optional<Usuario> usuario = usuarioRepository.findById(id);
-		if (usuario.isPresent())
-			return ResponseEntity.status(HttpStatus.OK).body(usuario);
-		
-		return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Não existe usuário ID " + id);
+		Usuario usuario;
+		try {
+			usuario = this.usuarioService.findById(id);
+		} catch (Exception e) {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+		}
+		return ResponseEntity.status(HttpStatus.OK).body(usuario);
 	}
 	
 	@PutMapping("/{id}")
 	public ResponseEntity<Object> putUsuario(@PathVariable long id, @RequestBody Usuario usuario){
 		usuario.setId(id);
-		usuarioRepository.save(usuario);
+		try {
+			usuarioService.save(usuario);
+		} catch (Exception e) {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+		}
 		return ResponseEntity.status(HttpStatus.OK).body(usuario);
 	}
 	
 	@DeleteMapping("/{id}")
 	public ResponseEntity<Object> deleteUsuario(@PathVariable long id) {
-		usuarioRepository.deleteById(id);
+		try {
+			usuarioService.deleteById(id);
+		} catch (Exception e) {
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+		}
 		return ResponseEntity.status(HttpStatus.OK).body("Deletado com sucesso!");
 	}
 	
 	@PatchMapping("/status/{id}")
 	public ResponseEntity<Object> alteraStatus(@PathVariable long id){
-		usuarioRepository.alteraStatus(id);
+		try {
+			usuarioService.alteraStatus(id);
+		} catch (Exception e) {
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+		}
 		return ResponseEntity.status(HttpStatus.OK).body(id);
 	}
 	
