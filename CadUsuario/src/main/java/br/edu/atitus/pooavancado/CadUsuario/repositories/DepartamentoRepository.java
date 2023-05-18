@@ -18,9 +18,4 @@ public interface DepartamentoRepository extends JpaRepository<Departamento, Long
 	
 	boolean existsByNomeAndIdNot(String nome, long id);
 	
-	@Query(value = "UPDATE departamento set status = not status where id = :id", nativeQuery = true)
-	@Modifying
-	@Transactional
-	void alteraStatus(@Param("id") long id);
-
 }
