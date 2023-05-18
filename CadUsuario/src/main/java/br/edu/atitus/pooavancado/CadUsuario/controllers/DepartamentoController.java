@@ -86,12 +86,4 @@ public class DepartamentoController {
 		return ResponseEntity.status(HttpStatus.OK).body("Deletado com sucesso!");
 	}
 	
-	
-	
-	
-	
-	
-	
-	
-
 }

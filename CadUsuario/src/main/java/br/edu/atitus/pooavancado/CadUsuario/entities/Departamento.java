@@ -11,33 +11,15 @@ import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "departamento")
-public class Departamento implements Serializable{
+public class Departamento extends GenericEntity{
 
 	private static final long serialVersionUID = 1L;
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private long id;
-	
-	@Column(length = 200, nullable = false)
-	private String nome;
 	@Column(length = 150, nullable = true)
 	private String email;
 	
 	private Integer ramal;
 	
-	public long getId() {
-		return id;
-	}
-	public void setId(long id) {
-		this.id = id;
-	}
-	public String getNome() {
-		return nome;
-	}
-	public void setNome(String nome) {
-		this.nome = nome;
-	}
 	public String getEmail() {
 		return email;
 	}
