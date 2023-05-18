@@ -3,6 +3,7 @@ package br.edu.atitus.pooavancado.CadUsuario.servicesimpl;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import br.edu.atitus.pooavancado.CadUsuario.entities.Usuario;
 import br.edu.atitus.pooavancado.CadUsuario.repositories.UsuarioRepository;
@@ -20,6 +21,7 @@ public class UsuarioServiceImpl implements UsuarioService{
 
 
 	@Override
+	@Transactional
 	public Usuario save(Usuario usuario) throws Exception {
 		if (usuarioRepository.existsByNomeAndIdNot(usuario.getNome(), usuario.getId()))
 			throw new Exception("Já existe usuário com este nome!");
@@ -43,6 +45,7 @@ public class UsuarioServiceImpl implements UsuarioService{
 
 
 	@Override
+	@Transactional
 	public void deleteById(long id) throws Exception {
 		if (!usuarioRepository.existsById(id))
 			throw new Exception("Não existe usuário com o Id: " + id);
@@ -51,6 +54,7 @@ public class UsuarioServiceImpl implements UsuarioService{
 
 
 	@Override
+	@Transactional
 	public void alteraStatus(long id) throws Exception {
 		if (!usuarioRepository.existsById(id))
 			throw new Exception("Não existe usuário com o Id: " + id);
