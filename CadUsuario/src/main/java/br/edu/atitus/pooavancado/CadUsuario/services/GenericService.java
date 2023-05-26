@@ -6,13 +6,13 @@ import org.springframework.data.domain.Pageable;
 import br.edu.atitus.pooavancado.CadUsuario.entities.GenericEntity;
 import br.edu.atitus.pooavancado.CadUsuario.repositories.GenericRepository;
 
-public interface GenericService<TEntidade extends GenericEntity, TRepository extends GenericRepository<TEntidade>> {
+public interface GenericService<TEntidade extends GenericEntity> {
 	
-	TRepository getRepository();
+	GenericRepository<TEntidade> getRepository();
 	
 	default TEntidade save(TEntidade objeto) throws Exception{
 		if (getRepository().existsByNomeAndIdNot(objeto.getNome(), objeto.getId()))
-			throw new Exception("Já existe usuário com este nome!");
+			throw new Exception("Já existe registro com este nome!");
 		return this.getRepository().save(objeto);
 	}
 	

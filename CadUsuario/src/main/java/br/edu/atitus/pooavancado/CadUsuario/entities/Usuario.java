@@ -7,6 +7,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
 @Entity
@@ -20,6 +22,12 @@ public class Usuario extends GenericEntity{
 	@Column(nullable = false)
 	private boolean status;
 	
+	@ManyToOne
+	@JoinColumn(name = "id_departamento", nullable = false)
+	private Departamento departamento;
+	
+	
+	
 	public String getEmail() {
 		return email;
 	}
@@ -31,6 +39,12 @@ public class Usuario extends GenericEntity{
 	}
 	public void setStatus(boolean status) {
 		this.status = status;
+	}
+	public Departamento getDepartamento() {
+		return departamento;
+	}
+	public void setDepartamento(Departamento departamento) {
+		this.departamento = departamento;
 	}
 	
 	

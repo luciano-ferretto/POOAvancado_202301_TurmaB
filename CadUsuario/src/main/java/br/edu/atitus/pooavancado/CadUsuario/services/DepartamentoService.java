@@ -9,7 +9,7 @@ import org.springframework.data.repository.query.Param;
 import br.edu.atitus.pooavancado.CadUsuario.entities.Departamento;
 import br.edu.atitus.pooavancado.CadUsuario.repositories.DepartamentoRepository;
 
-public interface DepartamentoService extends GenericService<Departamento, DepartamentoRepository>{
+public interface DepartamentoService extends GenericService<Departamento>{
 	
 	
 }
