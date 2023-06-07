@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import br.edu.atitus.pooavancado.CadUsuario.entities.GenericEntity;
 import br.edu.atitus.pooavancado.CadUsuario.services.GenericService;
-
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.*;
 @RestController
 public abstract class GenericController<TEntidade extends GenericEntity> {
 	
@@ -38,6 +38,14 @@ public abstract class GenericController<TEntidade extends GenericEntity> {
 			@RequestParam(required = false) String nome, @RequestParam(required = false) String email){
 		try {
 			Page<TEntidade> lista = getService().findByNome(nome, paginacao);
+			for (TEntidade tEntidade : lista) {
+				long id = tEntidade.getId();
+				tEntidade.add(linkTo(methodOn(GenericController.class).getRegistroById(id)).withSelfRel());
+				tEntidade.add(linkTo(methodOn(GenericController.class).putRegistro(id, tEntidade))
+						.withRel("PUT - Alterar"));
+				tEntidade.add(
+						linkTo(methodOn(GenericController.class).deleteRegistro(id)).withRel("DELETE - Remover"));
+			}
 			return ResponseEntity.status(HttpStatus.OK).body(lista);
 		} catch (Exception e) {
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
