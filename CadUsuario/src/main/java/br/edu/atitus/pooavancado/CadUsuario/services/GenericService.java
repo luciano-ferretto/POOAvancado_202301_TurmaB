@@ -10,9 +10,15 @@ public interface GenericService<TEntidade extends GenericEntity> {
 	
 	GenericRepository<TEntidade> getRepository();
 	
-	default TEntidade save(TEntidade objeto) throws Exception{
+	default void validateSave(TEntidade objeto) throws Exception {
+		if (objeto.getNome() == null || objeto.getNome().isEmpty())
+			throw new Exception("É necessário informar um nome válido");
 		if (getRepository().existsByNomeAndIdNot(objeto.getNome(), objeto.getId()))
 			throw new Exception("Já existe registro com este nome!");
+	}
+	
+	default TEntidade save(TEntidade objeto) throws Exception{
+		this.validateSave(objeto);
 		return this.getRepository().save(objeto);
 	}
 	

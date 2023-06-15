@@ -13,5 +13,7 @@ public interface UsuarioRepository extends GenericRepository<Usuario>{
 	@Query(value = "UPDATE usuario set status = not status where id = :id", nativeQuery = true)
 	@Modifying
 	void alteraStatus(@Param("id") long id);
+	
+	boolean existsByEmailAndIdNot(String email, long id);
 
 }

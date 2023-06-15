@@ -17,7 +17,7 @@ public class Usuario extends GenericEntity{
 
 	private static final long serialVersionUID = 1L;
 
-	@Column(length = 150, nullable = true)
+	@Column(length = 150, nullable = false, unique = true)
 	private String email;
 	@Column(nullable = false)
 	private boolean status;
@@ -25,6 +25,9 @@ public class Usuario extends GenericEntity{
 	@ManyToOne
 	@JoinColumn(name = "id_departamento", nullable = false)
 	private Departamento departamento;
+	
+	@Column(nullable = false)
+	private String senha;
 	
 	
 	
@@ -45,6 +48,12 @@ public class Usuario extends GenericEntity{
 	}
 	public void setDepartamento(Departamento departamento) {
 		this.departamento = departamento;
+	}
+	public String getSenha() {
+		return senha;
+	}
+	public void setSenha(String senha) {
+		this.senha = senha;
 	}
 	
 	
