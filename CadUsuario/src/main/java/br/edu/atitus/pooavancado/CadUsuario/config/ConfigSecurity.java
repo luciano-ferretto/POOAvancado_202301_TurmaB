@@ -9,9 +9,19 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+
+import br.edu.atitus.pooavancado.CadUsuario.components.AuthTokenFilter;
 
 @Configuration
 public class ConfigSecurity {
+	
+	private final AuthTokenFilter authTokenFilter;
+	public ConfigSecurity(AuthTokenFilter authTokenFilter) {
+		super();
+		this.authTokenFilter = authTokenFilter;
+	}
+
 	@Bean
 	public PasswordEncoder getPasswordEncoder() {
 		return new BCryptPasswordEncoder();
@@ -32,7 +42,8 @@ public class ConfigSecurity {
 			.authorizeHttpRequests(auth -> auth
 					.requestMatchers("/auth/**").permitAll()
 					.anyRequest().authenticated()
-					);
+					)
+			.addFilterBefore(authTokenFilter, UsernamePasswordAuthenticationFilter.class);
 		
 		return http.build();
 	}
